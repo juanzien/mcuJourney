@@ -1,0 +1,48 @@
+#include <Arduino.h>
+
+const int arrLed[] = {8, 9, 10, 11, 12};
+const int pb = 3;
+int index = 0;
+int dir = 1;
+bool pbState = LOW;
+
+unsigned long interval = 2000;
+unsigned long prev = 0;
+unsigned long curr;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(pb, INPUT);
+  for (int i = 0; i <= 4; i++){
+    pinMode(arrLed[i], OUTPUT);
+    digitalWrite(arrLed[i], LOW);
+  }
+}
+
+void loop() {
+  curr = millis();
+  pbState = digitalRead(pb);
+
+  if (pbState == LOW){
+    if(curr - prev >= interval){
+      prev = curr;
+       for (int i = 0; i <= 4; i++){
+        digitalWrite(arrLed[i], LOW);
+       } 
+      digitalWrite(arrLed[index], HIGH);
+      index += dir;
+
+       if (index == 4){
+        dir = -1;
+       }
+       if (index == 0){
+        dir = 1;
+       }
+   }
+  } else {
+    for (int i = 0; i <= 4; i++){
+      digitalWrite(arrLed[i], LOW);
+    }
+  }
+}
+
